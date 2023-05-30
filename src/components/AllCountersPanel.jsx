@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { toast } from "react-toastify";
+import printJS from "print-js";
+// import { over } from "stompjs";
+// import SockJS from "sockjs-client";
 
+// var stompClient = null;
 const AllCountersPanel = (props) => {
   const { setProgress } = props;
   const [userTokens, setUserTokens] = useState([]);
@@ -20,6 +23,23 @@ const AllCountersPanel = (props) => {
       .catch(function (error) {
         console.log(error);
       });
+  };
+
+  const handlePrint = () => {
+    printJS({
+      printable: userTokenData,
+      properties: [
+        "tokenId",
+        "servicetypeId",
+        "generationTime",
+        "status",
+        "expectedTime",
+        "frequencyOfCalling",
+        "calledAtTime",
+        "servedTime",
+      ],
+      type: "json",
+    });
   };
 
   useEffect(() => {
@@ -41,6 +61,19 @@ const AllCountersPanel = (props) => {
     axios.get("http://localhost:8080/get/allSubServices").then((response) => {
       setServiceTypes(response.data);
     });
+
+    // let Sock = new SockJS("http://localhost:8080/ws");
+    // stompClient = over(Sock);
+    // stompClient.connect({}, () => {
+    //   stompClient.subscribe("/topic/counters", (message) => {
+    //     const counters = JSON.parse(message.body);
+    //     setCounters(counters);
+    //   });
+    // });
+
+    // return () => {
+    // stompClient.disconnect();
+    // };
 
     const intervalId = setInterval(() => {
       fetchData();
@@ -65,24 +98,6 @@ const AllCountersPanel = (props) => {
     });
     setUserTokenData(temp);
   }, [userTokens, setProgress]);
-
-  useEffect(() => {
-    counters.map((eachCounter) => {
-      if (userTokens.includes(eachCounter.isWorking)) {
-        toast.success("Your token called!!", {
-          position: "top-center",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-      }
-      return 0;
-    });
-  }, [counters, userTokens]);
 
   return (
     <section className="flex flex-col w-full px-5 py-10 text-gray-600 body-font md:flex-row ">
@@ -118,7 +133,17 @@ const AllCountersPanel = (props) => {
       </div>
       <div className="w-full p-3 md:w-1/4 tokendetails">
         <div className="p-5 bg-gray-200 rounded hover:shadow-lg">
-          <span className="text-xl font-semibold">Your token Details</span>
+          <div className="w-full justify-between flex">
+            <span className="text-xl font-semibold">Your token Details</span>
+            {userTokenData.length !== 0 && (
+              <button
+                onClick={handlePrint}
+                className="w-max h-max bg-indigo-500 px-2 py-1 rounded text-white"
+              >
+                Print
+              </button>
+            )}
+          </div>
           {userTokenData.length === 0 ? (
             <div className="flex flex-col">
               <span className="py-3">You have availed 0 services</span>
@@ -133,7 +158,7 @@ const AllCountersPanel = (props) => {
             <div>
               {userTokenData.map((e) => {
                 return (
-                  <div className="flex flex-col py-3 token" key={e.tokenId}>
+                  <div className="flex flex-col py-3" key={e.tokenId}>
                     <span>
                       Token Id:{" "}
                       <span className="font-semibold"> {e.tokenId}</span>

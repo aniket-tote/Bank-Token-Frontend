@@ -120,7 +120,7 @@ const ViewStats = () => {
                 return (
                   <div
                     key={counter.id}
-                    className="bg-gray-300 m-2 rounded w-full p-5"
+                    className="bg-gray-300 m-2 rounded w-full p-5 overflow-x-auto"
                   >
                     <div className="text-xl font-semibold">{counter.name}</div>
                     <div>
@@ -173,7 +173,7 @@ const ViewStats = () => {
                 return (
                   <div
                     key={counter.id}
-                    className="bg-gray-300 m-2 rounded w-full p-5"
+                    className="bg-gray-300 m-2 rounded w-full p-5 overflow-x-auto"
                   >
                     <div className="text-xl font-semibold">
                       Name: {counter.name}

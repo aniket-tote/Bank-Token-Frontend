@@ -27,7 +27,7 @@ const AdminDashboard = () => {
   }, [navigate]);
   return (
     <>
-      <section className="flex flex-col items-center w-full px-5 py-10 lg:py-24 md:space-y-24 space-y-10 text-gray-600 body-font">
+      <section className="flex flex-col bg-white items-center w-full px-5 py-10 lg:py-24 md:space-y-24 space-y-10 text-gray-600 body-font">
         <div className="flex flex-col w-full space-y-2 text-center">
           <h2 className="text-xs font-medium tracking-widest text-indigo-500 title-font">
             Admin Dashboard
